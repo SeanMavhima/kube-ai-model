@@ -1,4 +1,4 @@
-# KUBE-AI: Eyes in the Sky for Africa 🚁
+# KUBE-AI: Eyes in the Sky for Africa 
 
 > **Protecting wildlife and livestock through intelligent aerial monitoring**
 > 
@@ -22,10 +22,10 @@ Every year, African farmers lose **millions of dollars** worth of livestock to t
 
 Instead of generic object detection, we built something specifically for **African landscapes**:
 
-🎯 **Aerial-First Design** - Optimized for drone and satellite imagery  
-🌍 **Africa-Focused** - Trained on animals actually found here  
-⚡ **Lightning Fast** - Results in under 100ms  
-🚨 **Smart Alerts** - Knows the difference between a cow and a lion  
+ **Aerial-First Design** - Optimized for drone and satellite imagery  
+ **Africa-Focused** - Trained on animals actually found here  
+ **Lightning Fast** - Results in under 100ms  
+ **Smart Alerts** - Knows the difference between a cow and a lion  
 
 ## Supported Animals
 
@@ -81,26 +81,26 @@ Feature Extraction (1024×7×7)
 
 ## 🛠️ Technology Stack
 
-### **🧠 AI/ML Core:**
+### **AI/ML Core:**
 - **MindSpore** - Huawei's deep learning framework
 - **Python** - Primary programming language
 - **Custom CNN** - 5-layer convolutional neural network
 - **VOC Dataset Format** - XML annotation standard
 - **Supervised Learning** - Training methodology
 
-### **☁️ Cloud & Infrastructure:**
+### **Cloud & Infrastructure:**
 - **Huawei ModelArts** - Cloud AI training platform
 - **OBS (Object Storage)** - Dataset and model storage
 - **Moxing Library** - Cloud-local data transfer
 - **Docker** - Containerization for deployment
 
-### **📊 Data Processing:**
+### *Data Processing:**
 - **PIL/Pillow** - Image preprocessing
 - **NumPy** - Numerical computations
 - **XML Parser** - Annotation processing
 - **Data Augmentation** - Image transformations
 
-### **🎯 Model Architecture:**
+### **Model Architecture:**
 - **Object Detection** - Dual-head CNN (classification + localization)
 - **Batch Normalization** - Training stability
 - **Dropout** - Overfitting prevention
@@ -205,13 +205,12 @@ Every detection creates:
 
 ```bash
 # Example inference output:
-🚁 KUBE-AI DETECTION RESULTS
-🐾 Animal: elephant
-📊 Confidence: 85.34%
-📍 Location: [120, 150, 450, 400]
-🎯 Module: KUBE-Park
-🚨 Alert: HIGH - Confirmed Detection
-⚡ Processing Time: 87ms
+ KUBE-AI DETECTION RESULTS
+ Animal: elephant
+ Confidence: 85.34% Location: [120, 150, 450, 400]
+ Module: KUBE-Park
+ Alert: HIGH - Confirmed Detection
+ Processing Time: 87ms
 ```
 
 ---
@@ -259,4 +258,4 @@ This project is built for Africa's future. Commercial use requires permission, b
 
 *"In the vast landscapes of Africa, every animal matters. KUBE-AI ensures none go unseen."*
 
-**🚁 KUBE-AI: Protecting Africa's Future, One Detection at a Time** 🌍
+** KUBE-AI: Protecting Africa's Future, One Detection at a Time** 🌍
