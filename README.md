@@ -121,7 +121,7 @@ MindSpore 2.0+
 ### Installation
 ```bash
 # 1. Clone repository
-git clone https://github.com/your-username/Kube-ai.git
+git clone https://github.com/amiparadis250/Kube-ai.git
 cd Kube-ai
 
 # 2. Create virtual environment
