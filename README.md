@@ -77,6 +77,36 @@ Feature Extraction (1024×7×7)
 
 ---
 
+## 🛠️ Technology Stack
+
+### **🧠 AI/ML Core:**
+- **MindSpore** - Huawei's deep learning framework
+- **Python** - Primary programming language
+- **Custom CNN** - 5-layer convolutional neural network
+- **VOC Dataset Format** - XML annotation standard
+- **Supervised Learning** - Training methodology
+
+### **☁️ Cloud & Infrastructure:**
+- **Huawei ModelArts** - Cloud AI training platform
+- **OBS (Object Storage)** - Dataset and model storage
+- **Moxing Library** - Cloud-local data transfer
+- **Docker** - Containerization for deployment
+
+### **📊 Data Processing:**
+- **PIL/Pillow** - Image preprocessing
+- **NumPy** - Numerical computations
+- **XML Parser** - Annotation processing
+- **Data Augmentation** - Image transformations
+
+### **🎯 Model Architecture:**
+- **Object Detection** - Dual-head CNN (classification + localization)
+- **Batch Normalization** - Training stability
+- **Dropout** - Overfitting prevention
+- **Adam Optimizer** - Gradient descent algorithm
+- **Multi-loss Function** - Classification + bounding box regression
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -88,7 +118,7 @@ MindSpore 2.0+
 
 ### Installation
 ```bash
-git clone https://github.com/amiparadis250/Kube-ai.git
+git clone https://github.com/your-username/Kube-ai.git
 cd Kube-ai
 pip install -r requirements_mindspore.txt
 ```
@@ -182,22 +212,6 @@ Kube-ai/
 
 ---
 
-## Integration with KUBE Platform
-
-KUBE-AI is the intelligence engine behind the larger KUBE ecosystem:
-
-- **KUBE-Farm** - Livestock management dashboard
-- **KUBE-Park** - Wildlife conservation tools  
-- **KUBE-Land** - Environmental monitoring
-
-**Tech Stack:**
-- **Backend:** Node.js + PostgreSQL
-- **Frontend:** Next.js + Mapbox
-- **Infrastructure:** AWS + Supabase
-- **AI Engine:** This repository (MindSpore)
-
----
-
 ## Performance Benchmarks
 
 | Metric | Value | Notes |
@@ -206,23 +220,6 @@ KUBE-AI is the intelligence engine behind the larger KUBE ecosystem:
 | **Accuracy** | 90%+ | On aerial imagery |
 | **Detection Range** | 50m-500m | Optimal altitude |
 | **Supported FPS** | 10+ | Real-time processing |
-
----
-
-## Contributing
-
-We welcome contributions from:
-- **Wildlife researchers** - Help us identify more species
-- **Drone operators** - Share aerial footage for training
-- **Developers** - Improve the AI models and infrastructure
-- **Conservationists** - Guide real-world deployment
-
-### Development Setup
-1. Fork this repository
-2. Create a feature branch (`git checkout -b feature/amazing-improvement`)
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
 
 ---
 
@@ -246,14 +243,6 @@ This project is built for Africa's future. Commercial use requires permission, b
 
 ---
 
-## Get Involved
-
-🌍 **Website:** [kube-platform.com](https://kube-platform.com)  
-📧 **Contact:** hello@kube-platform.com  
-🐦 **Twitter:** [@KubePlatform](https://twitter.com/KubePlatform)  
-💬 **Discord:** [Join our community](https://discord.gg/kube)
-
----
 
 *"In the vast landscapes of Africa, every animal matters. KUBE-AI ensures none go unseen."*
 
