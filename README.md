@@ -138,7 +138,7 @@ pip install --upgrade pip
 pip install -r requirements_mindspore.txt
 ```
 
-### Quick Demo
+### Quick Dem
 ```bash
 # Make sure virtual environment is activated
 # You should see (kube_env) in your prompt
