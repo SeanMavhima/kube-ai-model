@@ -2,7 +2,7 @@
 
 > **Protecting wildlife and livestock through intelligent aerial monitoring**
 > 
-> **Huawei ICT Competition 2024 - Innovation Track Submission**
+> **Huawei ICT Competition 2025-2026 - Innovation Track Submission**
 
 KUBE-AI transforms drone footage into actionable intelligence, giving African communities the power to monitor their animals in real-time. From detecting lost cattle to preventing elephant poaching, our AI sees what humans can't from the ground.
 
