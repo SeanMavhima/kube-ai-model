@@ -1,85 +1,82 @@
-from flask import Flask, request, jsonify
-import torch
-import torch.nn as nn
-from PIL import Image
-import numpy as np
-import io
-import base64
+#!/usr/bin/env python3
+"""
+KUBE-AI REST API Server
+Serves aerial animal detection via HTTP — MindSpore
+"""
+
+import os
+import sys
 import time
+import json
+import numpy as np
+from PIL import Image
+from flask import Flask, request, jsonify
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+import mindspore as ms
+import mindspore.nn as nn
+from mindspore import Tensor
+from kube_ai_inference import KubeAIModel, CLASS_LIST, get_module, get_alert
+
+ms.set_context(mode=ms.GRAPH_MODE, device_target="CPU")
 
 app = Flask(__name__)
 
-class Model(nn.Module):
-    def __init__(self, num_classes=10):
-        super().__init__()
-        self.conv1 = nn.Conv2d(3, 64, 3, padding=1)
-        self.conv2 = nn.Conv2d(64, 128, 3, padding=1)
-        self.conv3 = nn.Conv2d(128, 256, 3, padding=1)
-        self.pool = nn.MaxPool2d(2, 2)
-        self.relu = nn.ReLU()
-        self.fc = nn.Linear(256 * 28 * 28, num_classes)
-    
-    def forward(self, x):
-        x = self.pool(self.relu(self.conv1(x)))
-        x = self.pool(self.relu(self.conv2(x)))
-        x = self.pool(self.relu(self.conv3(x)))
-        x = x.view(x.size(0), -1)
-        return self.fc(x)
+MODEL = None
 
-# Load model
-model = Model()
-model.load_state_dict(torch.load('../models/kube_pytorch.pth'))
-model.eval()
 
-classes = ['cattle', 'goat', 'sheep', 'elephant', 'zebra', 'giraffe', 'buffalo', 'antelope', 'lion', 'leopard']
+def load_model(path, num_classes=10):
+    global MODEL
+    net = KubeAIModel(num_classes=num_classes)
+    ms.load_param_into_net(net, ms.load_checkpoint(path))
+    net.set_train(False)
+    MODEL = net
+    print(f"Model loaded from {path}")
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    if MODEL is None:
+        return jsonify({'error': 'Model not loaded'}), 503
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+
     try:
-        # Get image from request
-        if 'image' not in request.files:
-            return jsonify({'error': 'No image provided'}), 400
-        
-        file = request.files['image']
-        img = Image.open(file.stream).convert('RGB').resize((224, 224))
-        
-        # Preprocess
-        img_tensor = torch.tensor(np.array(img), dtype=torch.float32).permute(2, 0, 1) / 255.0
-        img_tensor = img_tensor.unsqueeze(0)
-        
-        # Predict
-        start_time = time.time()
-        with torch.no_grad():
-            outputs = model(img_tensor)
-            _, predicted = torch.max(outputs, 1)
-            confidence = torch.softmax(outputs, 1)[0][predicted].item()
-        
-        processing_time = (time.time() - start_time) * 1000
-        
-        animal = classes[predicted.item()]
-        
-        # Determine alert level
-        alert_level = "CRITICAL" if animal in ['lion', 'leopard'] else "STANDARD"
-        module = "KUBE-Park" if animal in ['elephant', 'zebra', 'giraffe', 'buffalo', 'antelope', 'lion', 'leopard'] else "KUBE-Farm"
-        
+        t0 = time.time()
+        img = Image.open(request.files['image'].stream).convert('RGB')
+        arr = np.transpose(np.array(img.resize((224, 224)), dtype=np.float32) / 255.0, (2, 0, 1))
+        tensor = Tensor(arr[np.newaxis, :], ms.float32)
+
+        cls_logits, bbox_preds = MODEL(tensor)
+        probs = nn.Softmax(axis=1)(cls_logits).asnumpy()[0]
+        pred = int(np.argmax(probs))
+        conf = float(probs[pred])
+        animal = CLASS_LIST[pred] if pred < len(CLASS_LIST) else f'unknown_{pred}'
+
         return jsonify({
             'detection_id': f'kube_{int(time.time())}',
             'animal_type': animal,
-            'confidence': round(confidence, 4),
-            'kube_module': module,
-            'alert_level': alert_level,
-            'processing_time_ms': round(processing_time, 2),
-            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
+            'confidence': round(conf, 4),
+            'kube_module': get_module(animal),
+            'alert_level': get_alert(conf, animal),
+            'inference_time_ms': round((time.time() - t0) * 1000, 2),
+            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
         })
-        
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @app.route('/health', methods=['GET'])
 def health():
-    return jsonify({'status': 'KUBE-AI API is running', 'version': '1.0'})
+    return jsonify({'status': 'running', 'model_loaded': MODEL is not None})
+
 
 if __name__ == '__main__':
-    print("🚁 KUBE-AI API Starting...")
-    print("📡 Endpoint: http://localhost:5000/predict")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    model_path = os.environ.get('KUBE_MODEL_PATH', '../models/kube_ai_final.ckpt')
+    if os.path.exists(model_path):
+        load_model(model_path)
+    else:
+        print(f"Warning: {model_path} not found — API will run in no-model mode")
+
+    app.run(host='0.0.0.0', port=5000)

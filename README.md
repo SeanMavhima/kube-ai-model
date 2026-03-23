@@ -1,169 +1,163 @@
-# KUBE-AI: Eyes in the Sky for Africa 
+# KUBE-AI: Eyes in the Sky for Africa
 
 > **Protecting wildlife and livestock through intelligent aerial monitoring**
-> 
-> **Huawei ICT Competition 2025-2026 - Innovation Track Submission**
+>
+> **Huawei ICT Competition 2025–2026 — Innovation Track**
 
-KUBE-AI transforms drone footage into actionable intelligence, giving African communities the power to monitor their animals in real-time. From detecting lost cattle to preventing elephant poaching, our AI sees what humans can't from the ground.
+KUBE-AI transforms drone footage into actionable intelligence, giving African communities the power to monitor animals in real-time — from detecting lost cattle to preventing elephant poaching.
 
 ---
 
-## The Problem We're Solving
+## Table of Contents
 
-Every year, African farmers lose **millions of dollars** worth of livestock to theft, predators, and disease. Meanwhile, wildlife populations face unprecedented threats from poaching and habitat loss. Traditional monitoring methods are:
+1. [Problem Statement](#problem-statement)
+2. [Solution Overview](#solution-overview)
+3. [Supported Animals](#supported-animals)
+4. [Technical Architecture](#technical-architecture)
+5. [Technology Stack](#technology-stack)
+6. [Reproduction Steps](#reproduction-steps)
+7. [Training](#training)
+8. [Inference](#inference)
+9. [Evaluation](#evaluation)
+10. [Project Structure](#project-structure)
+11. [Performance Benchmarks](#performance-benchmarks)
+12. [Real-World Impact](#real-world-impact)
+13. [License](#license)
 
-- **Too slow** - By the time rangers arrive, it's often too late
-- **Too expensive** - Hiring human monitors 24/7 is unsustainable  
-- **Too limited** - Ground-based observation covers tiny areas
+---
 
-**KUBE-AI changes this.**
+## Problem Statement
 
-## What Makes KUBE-AI Different
+Every year, African farmers lose **millions of dollars** worth of livestock to theft, predators, and disease. Wildlife populations face unprecedented threats from poaching and habitat loss. Traditional monitoring methods are too slow, too expensive, and too limited in coverage.
 
-Instead of generic object detection, we built something specifically for **African landscapes**:
+## Solution Overview
 
- **Aerial-First Design** - Optimized for drone and satellite imagery  
- **Africa-Focused** - Trained on animals actually found here  
- **Lightning Fast** - Results in under 100ms  
- **Smart Alerts** - Knows the difference between a cow and a lion  
+KUBE-AI is an aerial-first AI system built specifically for **African landscapes**:
+
+- **Aerial-First Design** — Optimized for drone and satellite imagery
+- **Africa-Focused** — Trained on animals found across the continent
+- **Lightning Fast** — Inference in under 100 ms per image
+- **Smart Alerts** — Distinguishes livestock from predators and triggers appropriate alerts
 
 ## Supported Animals
 
-| **KUBE-Farm** (Livestock) | **KUBE-Park** (Wildlife) | **Alert Level** |
-|---------------------------|---------------------------|-----------------|
-| 🐄 Cattle | 🐘 Elephants | Standard |
-| 🐐 Goats | 🦓 Zebras | Standard |
-| 🐑 Sheep | 🦒 Giraffes | Standard |
-| | 🐃 Buffalo | Standard |
-| | 🦌 Antelopes | Standard |
-| | 🦁 **Lions** | **CRITICAL** |
-| | 🐆 **Leopards** | **CRITICAL** |
-
-## Real-World Impact
-
-**For Farmers:**
-- Get SMS alerts when livestock wander off
-- Count herds automatically from drone footage
-- Receive predator warnings before attacks happen
-
-**For Conservationists:**
-- Track elephant migration patterns
-- Get instant poaching alerts
-- Conduct wildlife census without disturbing animals
-
-**For Rangers:**
-- Prioritize patrol routes based on AI insights
-- Respond to threats in minutes, not hours
-- Cover 10x more ground with the same resources
+| KUBE-Farm (Livestock) | KUBE-Park (Wildlife) | Alert Level |
+|---|---|---|
+| Cattle | Elephants | Standard |
+| Goats | Zebras | Standard |
+| Sheep | Giraffes | Standard |
+| | Buffalo | Standard |
+| | Antelopes | Standard |
+| | **Lions** | **CRITICAL** |
+| | **Leopards** | **CRITICAL** |
 
 ---
 
 ## Technical Architecture
 
-KUBE-AI uses a custom CNN built specifically for aerial animal detection:
+Custom dual-head CNN for simultaneous classification and localization:
 
 ```
-Aerial Image (224×224) 
+Aerial Image (224×224)
     ↓
-Enhanced Backbone (5 conv blocks)
-    ↓  
-Feature Extraction (1024×7×7)
+Enhanced Backbone (5 conv blocks → 1024 channels)
     ↓
-    ├─→ Species Classifier → "elephant"
-    └─→ Location Detector → [x, y, w, h]
+Feature Map (1024×7×7)
+    ↓
+    ├── Species Classifier  → animal class
+    └── Location Regressor  → [xmin, ymin, xmax, ymax]
 ```
 
-**Framework:** MindSpore (Huawei's AI platform)  
-**Training:** Supervised learning on VOC-format annotations  
-**Deployment:** Huawei ModelArts cloud infrastructure  
+## Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | MindSpore 2.0+ (Huawei) |
+| Language | Python 3.7–3.9 |
+| Model | 5-block CNN with BatchNorm, Dropout, dual heads |
+| Dataset Format | Pascal VOC (XML annotations) |
+| Training | Adam optimizer, multi-loss (CE + MSE) |
+| Cloud | Huawei ModelArts, OBS, Moxing |
+| Preprocessing | PIL/Pillow, NumPy |
 
 ---
 
-## 🛠️ Technology Stack
-
-### **AI/ML Core:**
-- **MindSpore** - Huawei's deep learning framework
-- **Python** - Primary programming language
-- **Custom CNN** - 5-layer convolutional neural network
-- **VOC Dataset Format** - XML annotation standard
-- **Supervised Learning** - Training methodology
-
-### **Cloud & Infrastructure:**
-- **Huawei ModelArts** - Cloud AI training platform
-- **OBS (Object Storage)** - Dataset and model storage
-- **Moxing Library** - Cloud-local data transfer
-- **Docker** - Containerization for deployment
-
-### *Data Processing:**
-- **PIL/Pillow** - Image preprocessing
-- **NumPy** - Numerical computations
-- **XML Parser** - Annotation processing
-- **Data Augmentation** - Image transformations
-
-### **Model Architecture:**
-- **Object Detection** - Dual-head CNN (classification + localization)
-- **Batch Normalization** - Training stability
-- **Dropout** - Overfitting prevention
-- **Adam Optimizer** - Gradient descent algorithm
-- **Multi-loss Function** - Classification + bounding box regression
-
----
-
-## Getting Started
+## Reproduction Steps
 
 ### Prerequisites
-```bash
-Python 3.7-3.9 (3.8 recommended)
-MindSpore 2.0+
-8GB RAM minimum
-```
 
-### Installation
+- Python 3.7–3.9 (3.8 recommended)
+- MindSpore 2.0+
+- 8 GB RAM minimum
+
+### 1. Clone and Set Up Environment
+
 ```bash
-# 1. Clone repository
 git clone https://github.com/amiparadis250/Kube-ai.git
 cd Kube-ai
 
-# 2. Create virtual environment
 python -m venv kube_env
 
-# 3. Activate environment
-# Windows:
+# Windows
 kube_env\Scripts\activate
-# Linux/Mac:
+# Linux / macOS
 source kube_env/bin/activate
 
-# 4. Install dependencies
 pip install --upgrade pip
 pip install -r requirements_mindspore.txt
 ```
 
-### Quick Dem
+### 2. Prepare the Dataset
+
+The repository includes partial annotations under `data/Annotations/` and `data/TestAnnotations/`. To download the full image datasets:
+
 ```bash
-# Make sure virtual environment is activated
-# You should see (kube_env) in your prompt
+# Download source datasets (requires Roboflow & Kaggle API keys)
+python download_datasets.py
 
-# 1. Download sample aerial images
-python download_dataset.py
-
-# 2. Train the model (quick 20 epochs)
-python kube_ai_train.py --epochs 20 --batch_size 4
-
-# 3. Test on an image
-python kube_ai_inference.py \
-    --model_path models/kube_ai_final.ckpt \
-    --image_path data/JPEGImages/cattle_001.jpg \
-    --output_path result.jpg
-
-# 4. Deactivate when done
-deactivate
+# Convert and prepare VOC-format data
+python prepare_data.py
 ```
 
----
+After preparation, the `data/` directory will contain:
 
-## Understanding the Output
+```
+data/
+├── JPEGImages/       # ~16 600 training images
+├── Annotations/      # VOC XML annotations
+├── TestImages/       # ~1 000 test images
+└── TestAnnotations/  # Test XML annotations
+```
 
-When KUBE-AI detects an animal, it provides:
+### 3. Train the Model
+
+```bash
+python kube_ai_train.py --epochs 20 --batch_size 4 --lr 0.0001
+```
+
+Key arguments:
+
+| Flag | Default | Description |
+|---|---|---|
+| `--data_url` | `./data` | Path to dataset |
+| `--train_url` | `./models` | Output directory for checkpoints |
+| `--epochs` | `20` | Number of training epochs |
+| `--batch_size` | `4` | Batch size |
+| `--lr` | `0.0001` | Learning rate |
+| `--num_classes` | `10` | Number of animal classes |
+
+Training logs are saved to `logs/training.log`. Checkpoints are saved to `models/`.
+
+### 4. Run Inference
+
+```bash
+python kube_ai_inference.py \
+    --model_path models/kube_ai_final.ckpt \
+    --image_path data/JPEGImages/img_000001.jpg \
+    --output_path results/detection_result.jpg
+```
+
+Output includes a visualized image with bounding boxes and a JSON file:
 
 ```json
 {
@@ -173,45 +167,18 @@ When KUBE-AI detects an animal, it provides:
     "bbox": [120, 150, 450, 400],
     "kube_module": "KUBE-Park",
     "alert_level": "HIGH - Confirmed Detection",
+    "inference_time_ms": 87.3,
     "timestamp": "2024-01-15 14:30:22"
 }
 ```
 
-**What this means:**
-- **94% confident** it found an elephant
-- **Located at** pixel coordinates [120, 150, 450, 400]
-- **Routed to** KUBE-Park (wildlife module)
-- **Alert level** HIGH (rangers should investigate)
-
----
-
-## Monitoring Training & Results
-
-### Training Progress
-```bash
-# Watch training in real-time
-tail -f logs/training.log
-
-# Sample output:
-# 2024-01-15 14:30:22 - Epoch 5/20 | Loss: 1.2345 | Time: 45.2s
-# 2024-01-15 14:31:07 - Epoch 6/20 | Loss: 1.1892 | Time: 44.8s
-```
-
-### Inference Results
-Every detection creates:
-- **Visual result** - Image with bounding box and label
-- **JSON data** - Machine-readable detection info
-- **Performance metrics** - Confidence scores and timing
+### 5. Evaluate Accuracy
 
 ```bash
-# Example inference output:
- KUBE-AI DETECTION RESULTS
- Animal: elephant
- Confidence: 85.34% Location: [120, 150, 450, 400]
- Module: KUBE-Park
- Alert: HIGH - Confirmed Detection
- Processing Time: 87ms
+python evaluate_model.py --model_path models/kube_ai_final.ckpt
 ```
+
+This runs inference on the test set and prints per-class precision, recall, F1-score, and overall accuracy. Results are saved to `logs/evaluation.log` and `results/evaluation_results.json`.
 
 ---
 
@@ -219,43 +186,60 @@ Every detection creates:
 
 ```
 Kube-ai/
-├── kube_ai_train.py           # Main training script
-├── kube_ai_inference.py       # Detection engine
-├── download_dataset.py        # Sample data downloader
-├── requirements_mindspore.txt  # Dependencies
+├── kube_ai_train.py            # Training entry point
+├── kube_ai_inference.py        # Inference entry point
+├── evaluate_model.py           # Evaluation entry point
+├── download_datasets.py        # Dataset downloader
+├── prepare_data.py             # VOC data preparation
+├── requirements_mindspore.txt  # MindSpore dependencies
+├── requirements.txt            # General dependencies
 ├── data/
-│   ├── JPEGImages/           # Aerial photos
-│   └── Annotations/          # Animal locations (XML)
-├── models/                   # Trained AI models
-└── logs/                     # Training history
+│   ├── JPEGImages/             # Training images
+│   ├── Annotations/            # Training annotations (VOC XML)
+│   ├── TestImages/             # Test images
+│   └── TestAnnotations/        # Test annotations (VOC XML)
+├── models/                     # Saved checkpoints
+├── logs/                       # Training & evaluation logs
+├── results/                    # Inference outputs
+├── visualizations/             # Accuracy plots
+└── scripts/                    # Additional utilities (see scripts/SCRIPTS.md)
+    ├── SCRIPTS.md              # Scripts documentation
+    ├── api.py                  # REST API server
+    ├── test_api.py             # API smoke test
+    ├── video_processor.py      # Video stream processing
+    ├── evaluate_accuracy.py    # Accuracy plot generator
+    ├── visualize_data.py       # Dataset visualization
+    └── visualize_training.py   # Training curve plots
 ```
-
----
 
 ## Performance Benchmarks
 
 | Metric | Value | Notes |
-|--------|-------|-------|
-| **Inference Speed** | <100ms | Per image on CPU |
-| **Accuracy** | 90%+ | On aerial imagery |
-| **Detection Range** | 50m-500m | Optimal altitude |
-| **Supported FPS** | 10+ | Real-time processing |
+|---|---|---|
+| Inference Speed | < 100 ms | Per image on CPU |
+| Accuracy | 90%+ | On aerial test imagery |
+| Detection Range | 50–500 m | Optimal drone altitude |
+| Supported FPS | 10+ | Real-time capable |
 
 ---
 
-## License & Usage
+## Real-World Impact
 
-**Huawei ICT Competition 2024 - Innovation Track**  
-**Copyright © 2025-2026 KUBE Platform**
+**For Farmers:** SMS alerts when livestock wander off, automatic herd counting, predator warnings.
 
-This project is built for Africa's future. Commercial use requires permission, but we encourage:
--  Academic research
-- Conservation projects  
-- Community initiatives
-- Educational purposes
+**For Conservationists:** Elephant migration tracking, instant poaching alerts, non-invasive wildlife census.
+
+**For Rangers:** AI-prioritized patrol routes, minute-level threat response, 10× ground coverage.
+
+---
+
+## License
+
+**Huawei ICT Competition 2025–2026 — Innovation Track**
+**© 2025 KUBE Platform**
+
+Open for academic research, conservation projects, community initiatives, and educational purposes. Commercial use requires permission.
 
 ---
 
 *"In the vast landscapes of Africa, every animal matters. KUBE-AI ensures none go unseen."*
-
-** KUBE-AI: Protecting Africa's Future, One Detection at a Time** 🌍

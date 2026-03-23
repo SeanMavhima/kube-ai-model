@@ -1,26 +1,26 @@
+#!/usr/bin/env python3
+"""Quick smoke-test for the KUBE-AI REST API."""
+
 import requests
 import json
 
-def test_api():
-    url = 'http://localhost:5000/predict'
-    
-    # Test with image file
-    with open('../data/JPEGImages/img_000001.jpg', 'rb') as f:
-        files = {'image': f}
-        response = requests.post(url, files=files)
-    
-    if response.status_code == 200:
-        result = response.json()
-        print("🐾 KUBE-AI API Response:")
-        print(json.dumps(result, indent=2))
-    else:
-        print(f"Error: {response.status_code}")
-        print(response.text)
+BASE = 'http://localhost:5000'
+
 
 def test_health():
-    response = requests.get('http://localhost:5000/health')
-    print("Health check:", response.json())
+    r = requests.get(f'{BASE}/health')
+    print("Health:", r.json())
+
+
+def test_predict(image_path='../data/JPEGImages/img_000001.jpg'):
+    with open(image_path, 'rb') as f:
+        r = requests.post(f'{BASE}/predict', files={'image': f})
+    if r.ok:
+        print("Prediction:", json.dumps(r.json(), indent=2))
+    else:
+        print(f"Error {r.status_code}: {r.text}")
+
 
 if __name__ == '__main__':
     test_health()
-    test_api()
+    test_predict()

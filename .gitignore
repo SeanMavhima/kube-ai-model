@@ -31,15 +31,14 @@ env/
 *.swp
 *.swo
 
-# Logs
-logs/
-*.log
+# Logs (keep logs/ for submission)
+# logs/
+# *.log
 
-# Models (large files)
+# Models — keep final checkpoint for submission
+# models/kube_ai_final.ckpt
 models/*.pth
-models/*.ckpt
 *.pth
-*.ckpt
 
 # Datasets (large files)
 datasets_clean/*/JPEGImages/

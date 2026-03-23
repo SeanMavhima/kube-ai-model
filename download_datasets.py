@@ -24,7 +24,11 @@ def download_kaggle_cows():
 
 def download_roboflow_datasets():
     """Download Roboflow wildlife & livestock datasets"""
-    rf = Roboflow(api_key="t5YRGeGhGUvUJNAbvsAQ")  # Replace with your key
+    api_key = os.environ.get('ROBOFLOW_API_KEY', '')
+    if not api_key:
+        print("Set ROBOFLOW_API_KEY environment variable first")
+        return
+    rf = Roboflow(api_key=api_key)
     
     datasets = [
         ('project-vbv5j', 'wildlife-yj7t1', 1),
