@@ -20,9 +20,10 @@ KUBE-AI transforms drone footage into actionable intelligence, giving African co
 8. [Inference](#inference)
 9. [Evaluation](#evaluation)
 10. [Project Structure](#project-structure)
-11. [Performance Benchmarks](#performance-benchmarks)
-12. [Real-World Impact](#real-world-impact)
-13. [License](#license)
+11. [Utility Scripts](#utility-scripts)
+12. [Performance Benchmarks](#performance-benchmarks)
+13. [Real-World Impact](#real-world-impact)
+14. [License](#license)
 
 ---
 
@@ -211,6 +212,63 @@ Kube-ai/
     ├── visualize_data.py       # Dataset visualization
     └── visualize_training.py   # Training curve plots
 ```
+
+## Utility Scripts
+
+The `scripts/` directory contains additional tools for deployment, visualization, and analysis.
+
+### REST API Server
+
+Serve the model as an HTTP endpoint for real-time detection:
+
+```bash
+cd scripts
+set KUBE_MODEL_PATH=../models/kube_ai_final.ckpt   # Windows
+python api.py
+```
+
+| Method | URL | Description |
+|---|---|---|
+| `POST` | `/predict` | Upload an image, receive detection JSON |
+| `GET` | `/health` | Health check |
+
+Test the API:
+
+```bash
+python test_api.py
+```
+
+### Video Processing
+
+Detect animals in drone video footage frame-by-frame:
+
+```bash
+cd scripts
+python video_processor.py \
+    --model_path ../models/kube_ai_final.ckpt \
+    --video_path drone_footage.mp4 \
+    --output_path ../results/video_results.json \
+    --frame_skip 5
+```
+
+### Visualization Tools
+
+```bash
+cd scripts
+
+# Generate accuracy plots from evaluation results
+python evaluate_accuracy.py
+
+# Visualize dataset distribution and sample images
+python visualize_data.py
+
+# Plot training loss and accuracy curves
+python visualize_training.py
+```
+
+All visualizations are saved to the `visualizations/` directory.
+
+---
 
 ## Performance Benchmarks
 
